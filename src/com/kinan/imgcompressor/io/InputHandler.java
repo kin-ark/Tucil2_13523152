@@ -30,9 +30,31 @@ public class InputHandler {
             if (errorMethod < 1 || errorMethod > 4) throw new IllegalArgumentException("Metode error tidak valid.");
 
             // Error Threshold
-            System.out.print("Masukkan ambang batas error: ");
-            errorThreshold = scanner.nextDouble();
-            if (errorThreshold < 0) throw new IllegalArgumentException("Ambang batas error harus positif."); // temp
+            switch (errorMethod) {
+                case 1:
+                    System.out.print("Masukkan ambang batas error [0, 16256.25]: ");
+                    errorThreshold = scanner.nextDouble();
+                    if (errorThreshold < 0 || errorThreshold > 16256.25) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 16256.25].");
+                    break;
+                case 2:
+                    System.out.print("Masukkan ambang batas error [0, 127.5]: ");
+                    errorThreshold = scanner.nextDouble();
+                    if (errorThreshold < 0 || errorThreshold > 127.5) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 127.5].");
+                    break;
+                case 3:
+                    System.out.print("Masukkan ambang batas error [0, 255]: ");
+                    errorThreshold = scanner.nextDouble();
+                    if (errorThreshold < 0 || errorThreshold > 255) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 255].");
+                    break;
+                case 4:
+                    System.out.print("Masukkan ambang batas error [0, 8]: ");
+                    errorThreshold = scanner.nextDouble();
+                    if (errorThreshold < 0 || errorThreshold > 8) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 8]");
+                    break;                
+                default:
+                    throw new IllegalArgumentException("Method tidak valid!");
+            }
+
 
             // Minimum Block Size
             System.out.print("Masukkan ukuran blok minimum: ");
@@ -49,12 +71,23 @@ public class InputHandler {
             System.out.print("Masukkan alamat absolut gambar hasil kompresi: ");
             outputImagePath = scanner.nextLine().trim();
             if (outputImagePath.isEmpty()) throw new IllegalArgumentException("Path output gambar tidak boleh kosong.");
+            File outputImageFile = new File(outputImagePath);
+            if (outputImageFile.getParentFile() == null) throw new IllegalArgumentException("Direktori tidak valid!");
+            else if (!outputImageFile.getParentFile().isDirectory()) throw new IllegalArgumentException("Direktori tidak valid!");
+            else if (getFileType(outputImagePath) != getFileType(inputImagePath)) throw new IllegalArgumentException("Tipe file input dan output harus sama!");
 
             // Output GIF Path
             System.out.print("Masukkan alamat absolut gif (opsional, tekan enter untuk melewati): ");
             outputGifPath = scanner.nextLine().trim();
             if (outputGifPath.isEmpty()) {
                 outputGifPath = null;
+            }
+            else
+            {
+                File outputGIFFile = new File(outputGifPath);
+                if (outputGIFFile.getParentFile() == null) throw new IllegalArgumentException("Direktori tidak valid!");
+                else if (!outputGIFFile.getParentFile().isDirectory()) throw new IllegalArgumentException("Direktori tidak valid!");
+                else if (getFileType(outputGifPath).toLowerCase() != "gif") throw new IllegalArgumentException("Tipe file harus .gif!");
             }
         } catch (InputMismatchException e) {
             System.err.println("Input tidak valid. Pastikan Anda memasukkan angka dengan format yang benar.");
@@ -103,10 +136,10 @@ public class InputHandler {
         return outputGifPath;
     }
 
-    public String getFileType()
+    public String getFileType(String path)
     {
         String format = "";
-        File file = new File(inputImagePath);
+        File file = new File(path);
         String name = file.getName();
         int lastDot = name.lastIndexOf('.');
         if (lastDot > 0) {

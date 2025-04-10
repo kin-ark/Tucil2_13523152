@@ -20,7 +20,7 @@ public class App {
         double threshold = input.getErrorThreshold();
         int minBlock = input.getMinimumBlockSize();
         float compressionTarget = input.getCompressionTarget();
-        String fileType = input.getFileType();
+        String fileType = input.getFileType(inputPath);
         long originalSize = new File(inputPath).length();
 
         // Debug output
