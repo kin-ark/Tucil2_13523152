@@ -63,7 +63,7 @@ public class App {
             System.out.println("Original Size: " + originalSize/1024 + "KB");
             System.out.println("Compressed Size: " + compressedSize/1024 + "KB");
             System.out.println("Compression Ratio: " + compressRatio);
-            System.out.println("Tree Depth: " + compressor.getMaxDepth() + 1);
+            System.out.println("Tree Depth: " + compressor.getMaxDepth());
             System.out.println("Number of Nodes: " + compressor.getNumOfNodes());
         } catch (IOException e) {
             System.err.println("Error loading image: " + e.getMessage());

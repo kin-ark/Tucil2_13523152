@@ -134,6 +134,8 @@ public class QuadtreeNode {
                 return computeMPDError(img, x, y, h, w);
             case 4:
                 return computeEntropyError(img, x, y, h, w);
+            case 5:
+                return computeSSIMError(img, x, y, h, w);
             default:
                 throw new IllegalArgumentException("Invalid error method: " + method);
         }
@@ -282,5 +284,51 @@ public class QuadtreeNode {
         }
 
         return entropy;
+    }
+
+    private double computeSSIMError(BufferedImage image, int x, int y, int height, int width)
+    {
+        int avgR = (avgColor >> 16) & 0xFF;
+        int avgG = (avgColor >> 8) & 0xFF;
+        int avgB = (avgColor) & 0xFF;
+
+        double C1 = Math.pow(0.01 * 255, 2);
+        double C2 = Math.pow(0.03 * 255, 2);
+
+        int n = width * height;
+        double meanR = 0, meanG = 0, meanB = 0;
+        double varR = 0, varG = 0, varB = 0;
+
+        for (int i = y; i < y + height; i++) {
+            for (int j = x; j < x + width; j++) {
+                int rgb = image.getRGB(j, i);
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
+                int b = rgb & 0xFF;
+                
+                meanR += r;
+                meanG += g;
+                meanB += b;
+
+                varR += Math.pow((r - avgR), 2);
+                varG += Math.pow((g - avgG), 2);
+                varB += Math.pow((b - avgB), 2);
+            }
+        }
+
+        meanR /= n; varR /= n;
+        meanG /= n; varG /= n;
+        meanB /= n; varB /= n;
+
+        // SSIM (varY = 0, covar = 0)
+        double ssimR = ((2 * meanR * avgR + C1) * C2) / ((meanR * meanR + avgR * avgR + C1) * (varR + C2));
+
+        double ssimG = ((2 * meanG * avgG + C1) * C2) / ((meanG * meanG + avgG * avgG + C1) * (varG + C2));
+
+        double ssimB = ((2 * meanB * avgB + C1) * C2) / ((meanB * meanB + avgB * avgB + C1) * (varB + C2));
+
+        double ssim = (ssimR + ssimG + ssimB) / 3.0;
+
+        return 1 - ssim;
     }
 }

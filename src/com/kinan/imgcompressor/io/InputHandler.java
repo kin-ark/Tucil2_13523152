@@ -25,9 +25,9 @@ public class InputHandler {
             if (inputImagePath.isEmpty()) throw new IllegalArgumentException("Path gambar tidak boleh kosong.");
 
             // Error Calculation Method
-            System.out.print("Pilih metode perhitungan error (1: Variance, 2: Mean Absolute Difference, 3: Max Pixel Difference, 4 Entropy): ");
+            System.out.print("Pilih metode perhitungan error (1: Variance, 2: Mean Absolute Difference, 3: Max Pixel Difference, 4: Entropy, 5: SSIM): ");
             errorMethod = scanner.nextInt();
-            if (errorMethod < 1 || errorMethod > 4) throw new IllegalArgumentException("Metode error tidak valid.");
+            if (errorMethod < 1 || errorMethod > 5) throw new IllegalArgumentException("Metode error tidak valid.");
 
             // Error Threshold
             switch (errorMethod) {
@@ -50,7 +50,12 @@ public class InputHandler {
                     System.out.print("Masukkan ambang batas error [0, 8]: ");
                     errorThreshold = scanner.nextDouble();
                     if (errorThreshold < 0 || errorThreshold > 8) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 8]");
-                    break;                
+                    break;
+                case 5:
+                    System.out.print("Masukkan ambang batas error [0, 1): ");
+                    errorThreshold = scanner.nextDouble();
+                    if (errorThreshold < 0 || errorThreshold >= 1) throw new IllegalArgumentException("Ambang batas error harus sesuai range [0, 1)");   
+                    break;  
                 default:
                     throw new IllegalArgumentException("Method tidak valid!");
             }
