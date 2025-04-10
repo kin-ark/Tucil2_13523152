@@ -74,7 +74,7 @@ public class InputHandler {
             File outputImageFile = new File(outputImagePath);
             if (outputImageFile.getParentFile() == null) throw new IllegalArgumentException("Direktori tidak valid!");
             else if (!outputImageFile.getParentFile().isDirectory()) throw new IllegalArgumentException("Direktori tidak valid!");
-            else if (getFileType(outputImagePath) != getFileType(inputImagePath)) throw new IllegalArgumentException("Tipe file input dan output harus sama!");
+            else if (!getFileType(outputImagePath).equals(getFileType(inputImagePath))) throw new IllegalArgumentException("Tipe file input dan output harus sama!");
 
             // Output GIF Path
             System.out.print("Masukkan alamat absolut gif (opsional, tekan enter untuk melewati): ");
@@ -87,7 +87,7 @@ public class InputHandler {
                 File outputGIFFile = new File(outputGifPath);
                 if (outputGIFFile.getParentFile() == null) throw new IllegalArgumentException("Direktori tidak valid!");
                 else if (!outputGIFFile.getParentFile().isDirectory()) throw new IllegalArgumentException("Direktori tidak valid!");
-                else if (getFileType(outputGifPath).toLowerCase() != "gif") throw new IllegalArgumentException("Tipe file harus .gif!");
+                else if (!getFileType(outputGifPath).equals("gif")) throw new IllegalArgumentException("Tipe file harus .gif!");
             }
         } catch (InputMismatchException e) {
             System.err.println("Input tidak valid. Pastikan Anda memasukkan angka dengan format yang benar.");
