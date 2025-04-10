@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuadtreeImageCompressor {
+    private static int numOfNodes = 1;
     private QuadtreeNode root;
     private int width, height, minimumBlockSize, maxDepth;
     private float compressionTarget;
@@ -40,6 +41,11 @@ public class QuadtreeImageCompressor {
         return maxDepth;
     }
 
+    public int getNumOfNodes()
+    {
+        return numOfNodes;
+    }
+
     public String getFormatName()
     {
         return formatName;
@@ -59,6 +65,7 @@ public class QuadtreeImageCompressor {
 
         if (node.split(image))
         {
+            numOfNodes += 4;
             for (QuadtreeNode child : node.getChildren()) 
             {
                 buildTree(image, child);
