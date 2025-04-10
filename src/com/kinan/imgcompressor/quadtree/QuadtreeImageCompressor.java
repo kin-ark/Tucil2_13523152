@@ -3,8 +3,11 @@ package com.kinan.imgcompressor.quadtree;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 public class QuadtreeImageCompressor {
     private static int numOfNodes = 1;
@@ -13,22 +16,27 @@ public class QuadtreeImageCompressor {
     private float compressionTarget;
     private double errorThreshold;
     private String formatName;
+    private long originalSize;
 
-    public QuadtreeImageCompressor(BufferedImage image, int minimumBlockSize, float compressionTarget, double errorThreshold, int method, String formatName)
+    public QuadtreeImageCompressor(BufferedImage image, int minimumBlockSize, float compressionTarget, double errorThreshold, int method, String formatName, long originalSize)
     {
         this.width = image.getWidth();
         this.height = image.getHeight();
         this.minimumBlockSize = minimumBlockSize;
         this.maxDepth = 0;
         this.compressionTarget = compressionTarget;
+        this.originalSize = originalSize;
         this.root = new QuadtreeNode(image, 0, 0, width, height, 0, method);
         this.formatName = formatName;
         if (compressionTarget == 0)
         {
             this.errorThreshold = errorThreshold;
+            buildTree(image, root);
         }
-
-        buildTree(image, root);
+        else
+        {
+            compressToTargetSize(image, (double) originalSize * (1 - compressionTarget), method);
+        }
     }
 
     public void setErrorThreshold(double threshold) 
@@ -115,5 +123,82 @@ public class QuadtreeImageCompressor {
 
         g.dispose();
         return image;
+    }
+
+    public void compressToTargetSize(BufferedImage image, double targetSizeKB, int method) {
+        double low, high;
+        switch (method) {
+            case 1:
+                low = 0;
+                high = 16256.5;
+                break;
+            case 2:
+                low = 0;
+                high = 127.5;
+                break;
+            case 3:
+                low = 0;
+                high = 255;
+                break;
+            case 4:
+                low = 0;
+                high = 8;
+                break;
+            case 5:
+                low = 0;
+                high = 1;
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        double bestThreshold = high;
+        BufferedImage bestImage = null;
+    
+        int iteration = 0;
+        double tolerance = 0.01;
+    
+        while (iteration < 100 && (high - low) > 0.0001) {
+            iteration++;
+            double mid = (low + high) / 2.0;
+    
+            setErrorThreshold(mid);
+            this.root = new QuadtreeNode(image, 0, 0, width, height, 0, method);
+            this.maxDepth = 0;
+            buildTree(image, root);
+            BufferedImage result = createImageFromDepth(this.maxDepth);
+            double sizeKB = estimateImageSize(result);
+    
+            double diff = Math.abs(sizeKB - targetSizeKB);
+            if (diff / targetSizeKB <= tolerance) {
+                bestThreshold = mid;
+                bestImage = result;
+                // System.out.printf("Selesai di iterasi %d\n", iteration);
+                break;
+            }
+    
+            if (sizeKB > targetSizeKB) {
+                low = mid;
+            } else {
+                bestThreshold = mid;
+                bestImage = result;
+                high = mid;
+            }
+    
+            // System.out.printf("Iteration %d -> Threshold: %.4f | Size: %.2f KB | Target: %.2f KB\n", iteration, mid, sizeKB, targetSizeKB);
+        }
+    
+        // System.out.printf("Selected threshold: %.4f after %d iterations\n", bestThreshold, iteration);
+    }
+    
+    private double estimateImageSize(BufferedImage image)
+    {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        ImageIO.write(image, formatName, baos);
+        return baos.size() / 1024.0;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Double.MAX_VALUE;
+        }
     }
 }

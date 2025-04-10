@@ -41,7 +41,7 @@ public class App {
 
             // Build compressor
             QuadtreeImageCompressor compressor = new QuadtreeImageCompressor(
-                image, minBlock, compressionTarget, threshold, method, fileType
+                image, minBlock, compressionTarget, threshold, method, fileType, originalSize / 1024
             );
 
             // Handle output
@@ -62,7 +62,7 @@ public class App {
             
             System.out.println("Size Sebelum Dikompres: " + originalSize/1024 + "KB");
             System.out.println("Size Setelah Dikompres: " + compressedSize/1024 + "KB");
-            System.out.println("Rasio Kompresi: " + compressRatio);
+            System.out.printf("Persentase Kompresi: %.2f%%\n", compressRatio * 100);
             System.out.println("Kedalaman Pohon: " + compressor.getMaxDepth());
             System.out.println("Jumlah Simpul: " + compressor.getNumOfNodes());
         } catch (IOException e) {
