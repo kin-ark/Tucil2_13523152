@@ -3,11 +3,8 @@ package com.kinan.imgcompressor.quadtree;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 public class QuadtreeImageCompressor {
     private QuadtreeNode root;
@@ -111,20 +108,5 @@ public class QuadtreeImageCompressor {
 
         g.dispose();
         return image;
-    }
-
-    public void renderAtDepth(int depth) 
-    {
-        if (depth > maxDepth) 
-        {
-            throw new IllegalArgumentException("Depth exceeds max tree depth.");
-        }
-        BufferedImage image = createImageFromDepth(depth);
-        try {
-            ImageIO.write(image, this.formatName, new File("quadtree_depth_" + depth + "." + formatName));
-            System.out.println("Saved image at depth " + depth);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
