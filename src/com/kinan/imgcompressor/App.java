@@ -55,18 +55,18 @@ public class App {
 
             long endTime = System.nanoTime();
             long executionTime = (endTime - startTime) / 1000000;
-            System.out.println(executionTime + "ms");
+            System.out.println("Lama Eksekusi: " + executionTime + "ms");
 
             long compressedSize = new File(outputPath).length();
             double compressRatio = 1 - ((double) compressedSize / originalSize);
             
-            System.out.println("Original Size: " + originalSize/1024 + "KB");
-            System.out.println("Compressed Size: " + compressedSize/1024 + "KB");
-            System.out.println("Compression Ratio: " + compressRatio);
-            System.out.println("Tree Depth: " + compressor.getMaxDepth());
-            System.out.println("Number of Nodes: " + compressor.getNumOfNodes());
+            System.out.println("Size Sebelum Dikompres: " + originalSize/1024 + "KB");
+            System.out.println("Size Setelah Dikompres: " + compressedSize/1024 + "KB");
+            System.out.println("Rasio Kompresi: " + compressRatio);
+            System.out.println("Kedalaman Pohon: " + compressor.getMaxDepth());
+            System.out.println("Jumlah Simpul: " + compressor.getNumOfNodes());
         } catch (IOException e) {
-            System.err.println("Error loading image: " + e.getMessage());
+            System.err.println("Error memuat gambar: " + e.getMessage());
         }
     }
 }

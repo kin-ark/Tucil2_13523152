@@ -18,7 +18,7 @@ public class OutputHandler {
             BufferedImage image = compressor.createImageFromDepth(depth);
             String formatName = compressor.getFormatName();
             ImageIO.write(image, formatName, new File(outputPath));
-            System.out.println("Compressed Image Path: " + outputPath);
+            System.out.println("Alamat absolut gambar yang sudah dikompres: " + outputPath);
         } catch (IOException e) {
             System.err.println("Failed to save image at depth " + depth);
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class OutputHandler {
                 BufferedImage frame = compressor.createImageFromDepth(depth);
                 gifWriter.writeFrame(fos, frame, delayMs);
             }
-            System.out.println("Saved GIF animation to: " + outputGifPath);
+            System.out.println("Alamat absolut GIF: " + outputGifPath);
         } catch (Exception e) {
             System.err.println("Failed to save GIF animation.");
             e.printStackTrace();
