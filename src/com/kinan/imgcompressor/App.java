@@ -47,11 +47,15 @@ public class App {
             // Handle output
             OutputHandler outputHandler = new OutputHandler();
 
+            System.err.println("");
+            System.out.println("Kompresi Selesai!");
+
+            outputHandler.renderAtDepth(compressor, compressor.getMaxDepth(), outputPath);
+
+
             if (gifPath != null && !gifPath.isBlank()) {
                 outputHandler.renderGIF(compressor, gifPath, 1000);
             }
-
-            outputHandler.renderAtDepth(compressor, compressor.getMaxDepth(), outputPath);
 
             long endTime = System.nanoTime();
             long executionTime = (endTime - startTime) / 1000000;
