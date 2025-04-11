@@ -1,0 +1,2 @@
+Main-Class: com.kinan.imgcompressor.App
+Class-Path: ../lib/AnimatedGIFWriter.jar

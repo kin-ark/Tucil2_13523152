@@ -35,12 +35,8 @@ if %ERRORLEVEL% NEQ 0 (
 rem === Build JAR ===
 echo Creating JAR...
 cd "%BIN%"
-jar cfe "%JAR_NAME%" %MAIN_CLASS% -C . .
+jar cfm "%JAR_NAME%" ..\manifest.txt -C . .
 cd ..
-
-echo Cleaning up intermediate files...
-for /R "%BIN%" %%f in (*.class) do del "%%f"
-for /D %%d in ("%BIN%\*") do rmdir /s /q "%%d"
 
 echo Build complete: %JAR_NAME%
 pause
