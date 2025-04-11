@@ -189,7 +189,7 @@ public class QuadtreeImageCompressor {
             // System.out.printf("Iteration %d -> Threshold: %.4f | Size: %.2f KB | Target: %.2f KB\n", iteration, mid, sizeKB, targetSizeKB);
         }
     
-        // System.out.printf("Selected threshold: %.4f after %d iterations\n", bestThreshold, iteration);
+        System.out.printf("Selected threshold: %.4f after %d iterations\n", bestThreshold, iteration);
     }
     
     private double estimateImageSize(BufferedImage image)
