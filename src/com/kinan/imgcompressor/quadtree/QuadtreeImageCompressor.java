@@ -35,6 +35,7 @@ public class QuadtreeImageCompressor {
         }
         else
         {
+            this.minimumBlockSize = 1;
             compressToTargetSize(image, (double) originalSize * (1 - compressionTarget), method);
         }
     }

@@ -292,11 +292,9 @@ public class QuadtreeNode {
         int avgG = (avgColor >> 8) & 0xFF;
         int avgB = (avgColor) & 0xFF;
 
-        double C1 = Math.pow(0.01 * 255, 2);
         double C2 = Math.pow(0.03 * 255, 2);
 
         int n = width * height;
-        double meanR = 0, meanG = 0, meanB = 0;
         double varR = 0, varG = 0, varB = 0;
 
         for (int i = y; i < y + height; i++) {
@@ -306,26 +304,22 @@ public class QuadtreeNode {
                 int g = (rgb >> 8) & 0xFF;
                 int b = rgb & 0xFF;
                 
-                meanR += r;
-                meanG += g;
-                meanB += b;
-
                 varR += Math.pow((r - avgR), 2);
                 varG += Math.pow((g - avgG), 2);
                 varB += Math.pow((b - avgB), 2);
             }
         }
 
-        meanR /= n; varR /= n;
-        meanG /= n; varG /= n;
-        meanB /= n; varB /= n;
+        varR /= n;
+        varG /= n;
+        varB /= n;
 
         // SSIM (varY = 0, covar = 0)
-        double ssimR = ((2 * meanR * avgR + C1) * C2) / ((meanR * meanR + avgR * avgR + C1) * (varR + C2));
+        double ssimR = (C2) / (varR + C2);
 
-        double ssimG = ((2 * meanG * avgG + C1) * C2) / ((meanG * meanG + avgG * avgG + C1) * (varG + C2));
+        double ssimG = (C2) / (varG + C2);
 
-        double ssimB = ((2 * meanB * avgB + C1) * C2) / ((meanB * meanB + avgB * avgB + C1) * (varB + C2));
+        double ssimB = (C2) / (varB + C2);
 
         double ssim = (ssimR + ssimG + ssimB) / 3.0;
 
